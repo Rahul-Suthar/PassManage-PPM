@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { v4 as uuidv4 } from 'uuid';
 
 const Form = ({ pass }) => {
   const [show, setShow] = useState(false);
@@ -12,29 +13,26 @@ const Form = ({ pass }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if any field is empty
+    // checking if all fields are filled properly
     if (Object.values(form).some((value) => value.trim() === "")) {
       alert("Please fill in all fields.");
       return;
     }
 
-    const newpassArr = [...(pass || []), form];
+    const newpassArr = [...(pass || []), {...form, id: uuidv4()}];
     localStorage.setItem("passwords", JSON.stringify(newpassArr));
     setform({ website: "", username: "", pass: "" });
     window.location.reload();
   };
 
   return (
-    <div className="flex flex-col items-center justify-around w-full md:w-[60%] h-full">
-      <div className="my-3 text-white">
+    <div className="flex flex-col items-center justify-around w-full md:w-[60%]">
+      <div className="mb-3 text-white">
         <p className="text-lg sm:text-3xl">PPM - Personal Password Manager</p>
       </div>
       <div className="bg-slate-800 border-2 border-green-500 rounded-lg shadow-xl text-white w-[90%]">
-        <form className="flex flex-col items-center justify-around h-full">
-          <div className="flex p-3 w-full items-center justify-between">
-            <label className="hidden sm:block" htmlFor="website">
-              WebSite URL
-            </label>
+        <form className="flex flex-col p-3 items-center justify-center gap-5">
+          <div className="flex p-2 w-full items-center justify-center border-2 rounded-md">
             <input
               value={form.website}
               placeholder="website url"
@@ -42,14 +40,11 @@ const Form = ({ pass }) => {
               name="website"
               id="website"
               onChange={handleChange}
-              className="outline-none rounded-md border-2 px-2 p-1 ml-2 flex-1"
+              className="outline-none flex-1"
             />
           </div>
-          <div className="flex flex-col sm:flex-row w-full">
-            <div className="flex p-3 w-full items-center justify-between">
-              <label className="hidden sm:block" htmlFor="username">
-                Username
-              </label>
+          <div className="flex flex-col items-center justify-center w-full sm:flex-row gap-3">
+            <div className="flex p-2 w-full items-center rounded-md justify-center border-2">
               <input
                 value={form.username}
                 placeholder="username"
@@ -57,13 +52,10 @@ const Form = ({ pass }) => {
                 name="username"
                 id="username"
                 onChange={handleChange}
-                className="outline-none rounded-md border-2 px-2 p-1 ml-2 flex-1"
+                className="outline-none flex-1"
               />
             </div>
-            <div className="flex p-3 w-full items-center justify-between relative">
-              <label className="hidden sm:block" htmlFor="pass">
-                Password
-              </label>
+            <div className="flex p-2 w-full items-center rounded-md justify-center border-2 relative">
               <input
                 value={form.pass}
                 placeholder="password"
@@ -71,15 +63,15 @@ const Form = ({ pass }) => {
                 name="pass"
                 id="pass"
                 onChange={handleChange}
-                className="outline-none rounded-md border-2 px-2 pr-8 p-1 ml-2 flex-1"
+                className="outline-none flex-1"
               />
-              <div className="absolute right-5" onClick={() => setShow(!show)}>
+              <div className="absolute right-3" onClick={() => setShow(!show)}>
                 {show ? <FaRegEyeSlash/> : <FaRegEye/> } 
               </div>
             </div>
           </div>
           <button
-            className="bg-green-700 text-black flex items-center gap-2 mb-2 px-5 py-2 rounded-md shadow-sm active:scale-95 cursor-pointer transition-all"
+            className="bg-green-700 text-black flex items-center gap-2 my-2 px-5 py-2 rounded-md shadow-sm active:scale-95 cursor-pointer transition-all"
             onClick={handleSubmit}
             type="submit"
           >
